@@ -112,6 +112,19 @@ public class TmdbClient {
                 .body(JsonNode.class);
     }
 
+    // ── Season details ────────────────────────────────────
+
+    /**
+     * GET /tv/{id}/season/{seasonNumber}
+     */
+    public JsonNode getSeasonDetails(int tmdbId, int seasonNumber) {
+        log.debug("TMDB → GET /tv/{}/season/{}", tmdbId, seasonNumber);
+        return restClient.get()
+                .uri("/tv/{id}/season/{seasonNumber}?api_key={api_key}", tmdbId, seasonNumber)
+                .retrieve()
+                .body(JsonNode.class);
+    }
+
     // ── Videos (trailers) ─────────────────────────────────
 
     /**

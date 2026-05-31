@@ -51,6 +51,19 @@ public class User implements UserDetails {
     @Builder.Default
     private boolean enabled = true;
 
+    @Column(nullable = false)
+    @Builder.Default
+    private boolean banned = false;
+
+    @Column(name = "banned_at")
+    private LocalDateTime bannedAt;
+
+    @Column(name = "ban_reason", columnDefinition = "TEXT")
+    private String banReason;
+
+    @Column(name = "suspended_until")
+    private LocalDateTime suspendedUntil;
+
     @CreationTimestamp
     @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt;
@@ -81,9 +94,10 @@ public class User implements UserDetails {
         return true;
     }
 
+    /** Account is locked while suspended. */
     @Override
     public boolean isAccountNonLocked() {
-        return true;
+        return suspendedUntil == null || suspendedUntil.isBefore(LocalDateTime.now());
     }
 
     @Override
@@ -91,8 +105,9 @@ public class User implements UserDetails {
         return true;
     }
 
+    /** Account is disabled if explicitly disabled or permanently banned. */
     @Override
     public boolean isEnabled() {
-        return enabled;
+        return enabled && !banned;
     }
 }

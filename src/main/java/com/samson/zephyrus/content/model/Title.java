@@ -71,6 +71,16 @@ public class Title {
     @Column(length = 20)
     private String status;
 
+    @Column(nullable = false)
+    @Builder.Default
+    private boolean published = true;
+
+    @Column(name = "available_from")
+    private LocalDateTime availableFrom;
+
+    @Column(name = "available_until")
+    private LocalDateTime availableUntil;
+
     @CreationTimestamp
     @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt;

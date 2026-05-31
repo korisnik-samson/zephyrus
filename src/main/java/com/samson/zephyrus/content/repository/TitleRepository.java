@@ -46,4 +46,6 @@ public interface TitleRepository extends JpaRepository<Title, UUID> {
 
     @Query("SELECT t FROM Title t ORDER BY t.createdAt DESC")
     Page<Title> findLatest(Pageable pageable);
+
+    long countByMediaType(MediaType mediaType);
 }
