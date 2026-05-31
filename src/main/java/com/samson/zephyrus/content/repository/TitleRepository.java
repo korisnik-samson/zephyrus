@@ -9,6 +9,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -21,6 +22,18 @@ public interface TitleRepository extends JpaRepository<Title, UUID> {
 
     @Query("SELECT t FROM Title t WHERE LOWER(t.title) LIKE LOWER(CONCAT('%', :query, '%'))")
     Page<Title> searchByTitle(@Param("query") String query, Pageable pageable);
+
+    @Query(
+        value = "SELECT * FROM titles WHERE to_tsvector('english', title || ' ' || COALESCE(overview, '')) " +
+                "@@ plainto_tsquery('english', :query)",
+        countQuery = "SELECT COUNT(*) FROM titles WHERE to_tsvector('english', title || ' ' || COALESCE(overview, '')) " +
+                     "@@ plainto_tsquery('english', :query)",
+        nativeQuery = true
+    )
+    Page<Title> searchFullText(@Param("query") String query, Pageable pageable);
+
+    @Query("SELECT DISTINCT t FROM Title t LEFT JOIN FETCH t.genres")
+    List<Title> findAllWithGenres();
 
     @Query("SELECT t FROM Title t JOIN t.genres g WHERE g.id = :genreId")
     Page<Title> findByGenreId(@Param("genreId") UUID genreId, Pageable pageable);

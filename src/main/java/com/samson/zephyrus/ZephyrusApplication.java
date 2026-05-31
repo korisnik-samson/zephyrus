@@ -3,6 +3,7 @@ package com.samson.zephyrus;
 import com.samson.zephyrus.config.CorsProperties;
 import com.samson.zephyrus.config.JwtProperties;
 import com.samson.zephyrus.config.TmdbProperties;
+import com.samson.zephyrus.search.config.MeilisearchProperties;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
@@ -13,7 +14,8 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 @EnableConfigurationProperties({
     JwtProperties.class,
     TmdbProperties.class,
-    CorsProperties.class
+    CorsProperties.class,
+    MeilisearchProperties.class
 })
 public class ZephyrusApplication {
 

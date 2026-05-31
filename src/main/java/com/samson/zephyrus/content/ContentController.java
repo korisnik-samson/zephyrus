@@ -118,18 +118,4 @@ public class ContentController {
         return ResponseEntity.ok(ApiResponse.success(genres));
     }
 
-    // ── Search
-
-    @GetMapping("/search")
-    @Operation(summary = "Search titles", description = "Search titles by query string with pagination")
-    public ResponseEntity<ApiResponse<SearchResultDto>> search(
-            @Parameter(description = "Search query") @RequestParam("q") String query,
-            @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "20") int size) {
-
-        log.debug("GET /api/search?q={}&page={}&size={}", query, page, size);
-        SearchResultDto results = contentService.searchTitles(query, page, size);
-
-        return ResponseEntity.ok(ApiResponse.success(results));
-    }
 }
