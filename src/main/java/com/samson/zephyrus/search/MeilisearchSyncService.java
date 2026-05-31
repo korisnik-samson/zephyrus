@@ -38,6 +38,7 @@ public class MeilisearchSyncService {
     public MeilisearchSyncService(MeilisearchProperties props, ObjectMapper objectMapper) {
         this.props = props;
         this.objectMapper = objectMapper;
+
         if (props.isEnabled()) {
             try {
                 this.client = new Client(new Config(props.getUrl(), props.getApiKey()));
@@ -98,9 +99,10 @@ public class MeilisearchSyncService {
             request.setOffset(page * size);
             request.setLimit(size);
 
-            SearchResult result = index.search(request);
+            SearchResult result = (SearchResult) index.search(request);
             List<TitleSummaryDto> titles = hitsToSummaries(result.getHits());
-            long total = result.getEstimatedTotalHits() != null
+
+            long total = result.getEstimatedTotalHits() != 0
                     ? result.getEstimatedTotalHits() : titles.size();
 
             return SearchResultDto.builder()
@@ -123,7 +125,7 @@ public class MeilisearchSyncService {
             request.setOffset(0);
             request.setLimit(5);
 
-            SearchResult result = index.search(request);
+            SearchResult result = (SearchResult) index.search(request);
             return result.getHits().stream()
                     .map(hit -> new SearchSuggestionDto(
                             UUID.fromString(String.valueOf(hit.get("id"))),
