@@ -6,6 +6,7 @@ import com.samson.zephyrus.playback.dto.ContinueWatchingDto;
 import com.samson.zephyrus.playback.dto.ProgressDto;
 import com.samson.zephyrus.playback.dto.SaveProgressRequest;
 import com.samson.zephyrus.playback.dto.StreamDto;
+import com.samson.zephyrus.playback.WatchHistoryService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -28,6 +29,7 @@ import java.util.UUID;
 public class PlaybackController {
 
     private final PlaybackService playbackService;
+    private final WatchHistoryService watchHistoryService;
 
     // ── Stream URL ────────────────────────────────────────
 
@@ -84,5 +86,16 @@ public class PlaybackController {
         List<ContinueWatchingDto> items = playbackService.getContinueWatching(user.getId());
 
         return ResponseEntity.ok(ApiResponse.success(items));
+    }
+
+    // ── Watch History ─────────────────────────────────────
+
+    @GetMapping("/history")
+    @Operation(summary = "Watch history", description = "Full watch history for the current user including completed titles, newest first")
+    public ResponseEntity<ApiResponse<List<ContinueWatchingDto>>> getHistory(
+            @AuthenticationPrincipal User user) {
+
+        log.debug("GET /api/playback/history user={}", user.getId());
+        return ResponseEntity.ok(ApiResponse.success(watchHistoryService.getHistory(user.getId())));
     }
 }
