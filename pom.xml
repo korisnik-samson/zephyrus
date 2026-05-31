@@ -127,6 +127,18 @@
                 </configuration>
             </plugin>
             <plugin>
+                <groupId>org.flywaydb</groupId>
+                <artifactId>flyway-maven-plugin</artifactId>
+                <configuration>
+                    <url>jdbc:postgresql://${env.POSTGRES_HOST:localhost}:${env.POSTGRES_PORT:5432}/${env.POSTGRES_DB:zephyrus}</url>
+                    <user>${env.POSTGRES_USER:zephyrus}</user>
+                    <password>${env.POSTGRES_PASSWORD:password}</password>
+                    <locations>
+                        <location>filesystem:src/main/resources/db/migration</location>
+                    </locations>
+                </configuration>
+            </plugin>
+            <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
                 <executions>
