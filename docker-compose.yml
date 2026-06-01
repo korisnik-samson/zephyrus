@@ -1,60 +1,60 @@
 services:
-  # ── PostgreSQL ───────────────────────────────────────────
-  postgres:
-    image: postgres:16-alpine
-    container_name: zephyrus-postgres
-    restart: unless-stopped
-    ports:
-      - "${POSTGRES_PORT:-5432}:5432"
-    environment:
-      POSTGRES_DB: ${POSTGRES_DB:-zephyrus}
-      POSTGRES_USER: ${POSTGRES_USER:-zephyrus}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-password}
-    volumes:
-      - pgdata:/var/lib/postgresql/data
-    healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-zephyrus}"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
+    # ── PostgreSQL ───────────────────────────────────────────
+    postgres:
+        image: postgres:16-alpine
+        container_name: zephyrus-postgres
+        restart: unless-stopped
+        ports:
+            - "${POSTGRES_PORT:-5432}:5432"
+        environment:
+            POSTGRES_DB: ${POSTGRES_DB:-zephyrus}
+            POSTGRES_USER: ${POSTGRES_USER:-zephyrus}
+            POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-password}
+        volumes:
+            - pgdata:/var/lib/postgresql/data
+        healthcheck:
+            test: [ "CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-zephyrus}" ]
+            interval: 10s
+            timeout: 5s
+            retries: 5
 
-  # ── Redis ────────────────────────────────────────────────
-  redis:
-    image: redis:7-alpine
-    container_name: zephyrus-redis
-    restart: unless-stopped
-    ports:
-      - "${REDIS_PORT:-6379}:6379"
-    volumes:
-      - redisdata:/data
-    healthcheck:
-      test: ["CMD", "redis-cli", "ping"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
+    # ── Redis ────────────────────────────────────────────────
+    redis:
+        image: redis:7-alpine
+        container_name: zephyrus-redis
+        restart: unless-stopped
+        ports:
+            - "${REDIS_PORT:-6379}:6379"
+        volumes:
+            - redisdata:/data
+        healthcheck:
+            test: [ "CMD", "redis-cli", "ping" ]
+            interval: 10s
+            timeout: 5s
+            retries: 5
 
-  # ── Meilisearch ──────────────────────────────────────────
-  meilisearch:
-    image: getmeili/meilisearch:v1.8
-    container_name: zephyrus-meilisearch
-    restart: unless-stopped
-    ports:
-      - "${MEILI_PORT:-7700}:7700"
-    environment:
-      MEILI_MASTER_KEY: ${MEILI_MASTER_KEY:-masterKey}
-      MEILI_NO_ANALYTICS: "true"
-    volumes:
-      - meilidata:/meili_data
-    healthcheck:
-      test: ["CMD", "wget", "--no-verbose", "--spider", "http://localhost:7700/health"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
+    # ── Meilisearch ──────────────────────────────────────────
+    meilisearch:
+        image: getmeili/meilisearch:v1.8
+        container_name: zephyrus-meilisearch
+        restart: unless-stopped
+        ports:
+            - "${MEILI_PORT:-7700}:7700"
+        environment:
+            MEILI_MASTER_KEY: ${MEILI_MASTER_KEY:-masterKey}
+            MEILI_NO_ANALYTICS: "true"
+        volumes:
+            - meilidata:/meili_data
+        healthcheck:
+            test: [ "CMD", "wget", "--no-verbose", "--spider", "http://localhost:7700/health" ]
+            interval: 10s
+            timeout: 5s
+            retries: 5
 
 volumes:
-  pgdata:
-    driver: local
-  redisdata:
-    driver: local
-  meilidata:
-    driver: local
+    pgdata:
+        driver: local
+    redisdata:
+        driver: local
+    meilidata:
+        driver: local
