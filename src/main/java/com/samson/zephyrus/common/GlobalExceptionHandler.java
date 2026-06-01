@@ -1,5 +1,6 @@
 package com.samson.zephyrus.common;
 
+import com.samson.zephyrus.subscription.TierRequiredException;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -119,6 +120,28 @@ public class GlobalExceptionHandler {
         log.debug("Illegal argument: {}", ex.getMessage());
         return ResponseEntity.badRequest()
                 .body(ApiResponse.error("Bad request", ex.getMessage()));
+    }
+
+    /**
+     * Handle illegal state (e.g., profile limit reached, billing disabled).
+     */
+    @ExceptionHandler(IllegalStateException.class)
+    public ResponseEntity<ApiResponse<Void>> handleIllegalState(
+            IllegalStateException ex) {
+        log.debug("Illegal state: {}", ex.getMessage());
+        return ResponseEntity.status(HttpStatus.CONFLICT)
+                .body(ApiResponse.error("Conflict", ex.getMessage()));
+    }
+
+    /**
+     * Handle subscription tier gating — feature requires a higher tier (HTTP 402).
+     */
+    @ExceptionHandler(TierRequiredException.class)
+    public ResponseEntity<ApiResponse<Void>> handleTierRequired(
+            TierRequiredException ex) {
+        log.debug("Tier required: {}", ex.getMessage());
+        return ResponseEntity.status(HttpStatus.PAYMENT_REQUIRED)
+                .body(ApiResponse.error("Upgrade required", ex.getMessage()));
     }
 
     /**

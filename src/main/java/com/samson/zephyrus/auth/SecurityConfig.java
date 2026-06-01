@@ -47,6 +47,8 @@ public class SecurityConfig {
                     .requestMatchers(HttpMethod.GET, "/api/content/**", "/api/search", "/api/search/suggestions", "/api/search/trending").permitAll()
                     .requestMatchers("/swagger-ui/**", "/v3/api-docs/**", "/swagger-ui.html").permitAll()
                     .requestMatchers("/actuator/health", "/actuator/info").permitAll()
+                    .requestMatchers("/api/webhooks/**").permitAll()  // Stripe (signature-verified)
+                    .requestMatchers("/ws/**").permitAll()            // WebSocket handshake (STOMP)
                     .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
 
                     // Admin endpoints
