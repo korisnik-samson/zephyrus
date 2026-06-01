@@ -136,6 +136,14 @@
             <artifactId>stripe-java</artifactId>
             <version>28.0.0</version>
         </dependency>
+
+        <!-- Loads a .env file from the project root into the Spring Environment
+             (so a host-run app picks up TMDB_API_KEY etc. without shell exports) -->
+        <dependency>
+            <groupId>me.paulschwarz</groupId>
+            <artifactId>spring-dotenv</artifactId>
+            <version>4.0.0</version>
+        </dependency>
     </dependencies>
 
     <build>
